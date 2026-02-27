@@ -12,8 +12,8 @@ import os
 # --------------------
 DATA_DIR = "data"
 MODEL_NAME = "bert-base-uncased"  # 如果你想用 cased 可以改成 bert-base-cased
-BATCH_SIZE = 4                  # Colab 免费 GPU 适合小 batch
-EPOCHS = 2                        # 第一次跑用 2 epoch 快速测试
+BATCH_SIZE = 16                  # Colab 免费 GPU 适合小 batch
+EPOCHS = 3                        # 第一次跑用 2 epoch 快速测试
 OUTPUT_DIR = "outputs"
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -21,20 +21,18 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 # --------------------
 # 读取数据
 # --------------------
-train_df = pd.read_csv(os.path.join(DATA_DIR, "train_clean.csv"))
-valid_df = pd.read_csv(os.path.join(DATA_DIR, "valid_clean.csv"))
+train_df = pd.read_csv(os.path.join(DATA_DIR, "Train_clean.csv"))
+valid_df = pd.read_csv(os.path.join(DATA_DIR, "Valid_clean.csv"))
 
 train_dataset = Dataset.from_pandas(train_df)
 valid_dataset = Dataset.from_pandas(valid_df)
-train_dataset = train_dataset.select(range(1000))
-val_dataset = valid_dataset.select(range(400))
 # --------------------
 # Tokenizer
 # --------------------
 tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
 
 def tokenize(batch):
-    return tokenizer(batch['text'], padding='max_length', truncation=True, max_length=128)
+    return tokenizer(batch['text'], padding='max_length', truncation=True, max_length=256)
 
 train_dataset = train_dataset.map(tokenize, batched=True)
 valid_dataset = valid_dataset.map(tokenize, batched=True)
@@ -71,8 +69,8 @@ training_args = TrainingArguments(
     per_device_eval_batch_size=BATCH_SIZE,
     eval_strategy="epoch",
     save_strategy="epoch",
-    dataloader_pin_memory=False,
-    logging_steps=50,
+    dataloader_pin_memory=True,
+    logging_steps=500,
     save_total_limit=2,
     load_best_model_at_end=True,
     metric_for_best_model="f1",
