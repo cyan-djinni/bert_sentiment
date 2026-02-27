@@ -1,7 +1,7 @@
 torch==2.10.0
 transformers==5.2.0
 datasets==4.6.0
-evaluate==0.x.x
+evaluate
 accelerate==1.12.0
 pandas==2.3.3
 scikit-learn==1.7.2
