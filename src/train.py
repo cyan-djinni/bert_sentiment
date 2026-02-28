@@ -14,7 +14,7 @@ DATA_DIR = "data"
 MODEL_NAME = "bert-base-uncased"  # 如果你想用 cased 可以改成 bert-base-cased
 BATCH_SIZE = 16                  # Colab 免费 GPU 适合小 batch
 EPOCHS = 3                        # 第一次跑用 2 epoch 快速测试
-OUTPUT_DIR = "outputs"
+OUTPUT_DIR = "/content/drive/MyDrive/bert_run1"
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
